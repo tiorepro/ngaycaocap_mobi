@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b4ea2">
+    <title>XEM NGÀY CAO CẤP · Mobile - By TIEN.TQN</title>
+    <link rel="stylesheet" href="style-mobile.css">
+
+</head>
+<body>
+    <div id="print-root">
+        <div id="print-note-khach">
+            <h2>Ghi chú từ Khầy Tiến</h2>
+            <p>Đây là nội dung ngày giờ tốt đã được Khầy Tiến tìm kiếm và lựa chọn cẩn thận...</p>
+            <p>Các giờ được tô màu xanh là những khung giờ tốt đã được chọn...</p>
+            <p>Trân trọng.</p>
+        </div>
+        <div id="print-selected-list"></div>
+    </div>
+
+    <div id="app" class="no-print">
+        <header class="app-header">
+            <div class="header-top">
+                <div>
+                    <p class="slogan">ĐẮC THIÊN KHÍ - VẠN SỰ AN</p>
+                    <h1>XEM NGÀY CAO CẤP</h1>
+                    <p class="sub">Mobile · By TIEN.TQN</p>
+                </div>
+                <button type="button" class="icon-btn" id="btn-notes" aria-label="Ghi chú">?</button>
+            </div>
+            <nav class="stepper" aria-label="3 bước">
+                <button type="button" class="step on" data-step="1"><span>1</span>Thông tin</button>
+                <button type="button" class="step" data-step="2"><span>2</span>Bộ lọc</button>
+                <button type="button" class="step" data-step="3"><span>3</span>Kết quả</button>
+            </nav>
+        </header>
+
+        <main class="app-main">
+            <!-- ========== BƯỚC 1 ========== -->
+            <section id="step-1" class="step-panel on">
+                <div class="card input-card">
+                    <h2>I. Thông tin đầu vào</h2>
+                    <label class="field">
+                        <span>TUỔI XEM</span>
+                        <input type="number" id="birth-year" value="1993" inputmode="numeric">
+                    </label>
+                    <label class="field">
+                        <span>TỌA XEM (độ)</span>
+                        <input type="number" id="toa-do" value="120" step="0.1" inputmode="decimal">
+                    </label>
+                    <label class="field">
+                        <span>NĂM XEM (ÂL)</span>
+                        <input type="number" id="view-year" inputmode="numeric">
+                    </label>
+                    <label class="field">
+                        <span>VIỆC XEM</span>
+                        <input type="text" id="event-check" placeholder="Động thổ, cưới hỏi, nhập trạch...">
+                    </label>
+                    <label class="field">
+                        <span>ĐỊA ĐIỂM XEM</span>
+                        <input type="text" id="location-check" placeholder="VD: Hà Nội, Quận 1...">
+                    </label>
+                    <div class="btn-row">
+                        <button type="button" class="btn ghost" id="btn-clear-form">Xóa form</button>
+                        <button type="button" class="btn primary" id="btn-calc">TÍNH TOÁN</button>
+                    </div>
+                    <p class="hint" id="calc-status">Nhập thông tin rồi bấm TÍNH TOÁN.</p>
+                </div>
+                <div id="part1-results"></div>
+            </section>
+
+            <!-- ========== BƯỚC 2 ========== -->
+            <section id="step-2" class="step-panel">
+                <div class="filter-toolbar">
+                    <button type="button" class="btn ghost sm" id="btn-reset-filter">Đặt lại</button>
+                    <div class="profile-row" id="profile-row">
+                        <button type="button" class="chip-btn on" data-profile="tuy-chinh">Tùy chỉnh</button>
+                        <button type="button" class="chip-btn" data-profile="lỏng">Lỏng</button>
+                        <button type="button" class="chip-btn" data-profile="vừa">Vừa</button>
+                        <button type="button" class="chip-btn" data-profile="nghiêm">Nghiêm</button>
+                    </div>
+                    <div class="live-count" id="live-count">Khớp: —</div>
+                </div>
+                <div id="filter-panel"></div>
+                <div class="apply-bar">
+                    <button type="button" class="btn primary block" id="btn-apply-filter">Áp dụng bộ lọc → Kết quả</button>
+                    <p class="hint">Nhóm 3 (quẻ) chỉ chạy khi bật và bấm Áp dụng.</p>
+                </div>
+            </section>
+
+            <!-- ========== BƯỚC 3 ========== -->
+            <section id="step-3" class="step-panel">
+                <div class="result-toolbar">
+                    <div id="result-meta">Chưa có kết quả</div>
+                    <div class="result-tools">
+                        <select id="sort-select">
+                            <option value="solar">Sắp theo dương lịch</option>
+                            <option value="lunar">Sắp theo âm lịch</option>
+                            <option value="tietkhi">Tiết khí Đáo lên trước</option>
+                            <option value="score">Điểm Hành/Vận Ngày–Giờ</option>
+                            <option value="que">Đánh giá quẻ TỐT trước</option>
+                        </select>
+                        <label class="check-inline"><input type="checkbox" id="group-by-month" checked> Gom tháng</label>
+                        <label class="check-inline"><input type="checkbox" id="only-selected"> Chỉ đã chọn</label>
+                    </div>
+                </div>
+                <div id="result-list"></div>
+            </section>
+        </main>
+
+        <footer class="bottom-bar">
+            <button type="button" class="btn ghost" id="btn-back">Quay lại</button>
+            <button type="button" class="count-pill" id="btn-selected-tray">Đã chọn 0</button>
+            <button type="button" class="btn primary" id="btn-next">Tiếp</button>
+        </footer>
+    </div>
+
+    <!-- Sheets -->
+    <div class="backdrop no-print" id="backdrop"></div>
+    <aside class="sheet no-print" id="sheet-notes">
+        <div class="sheet-head"><h3>Phương pháp Khầy Tiến</h3><button type="button" class="icon-btn close-sheet">×</button></div>
+        <div class="sheet-body">
+            <p>Chọn ngày theo Huyền Không Đại Quái: tránh Ngũ Hoàng, Thái Tuế, Tam Sát, Bát Sát; chọn Tự Hợp / Sinh Hợp / Tam Hợp / Bổ Long; tối ưu Hành–Vận 6 trụ; xét huyết thống quẻ (Phụ Mẫu ưu tiên, Tử Tức khi đúng 1 họ có bằng chứng).</p>
+            <p>Bản mobile giữ nguyên toàn bộ công thức bản desktop. Chỉ đổi cách nhập, lọc và hiển thị.</p>
+        </div>
+    </aside>
+    <aside class="sheet no-print" id="sheet-day">
+        <div class="sheet-head"><h3 id="sheet-day-title">Chi tiết ngày</h3><button type="button" class="icon-btn close-sheet">×</button></div>
+        <div class="sheet-body" id="sheet-day-body"></div>
+    </aside>
+    <aside class="sheet no-print" id="sheet-hour">
+        <div class="sheet-head"><h3 id="sheet-hour-title">Phân tích giờ</h3><button type="button" class="icon-btn close-sheet">×</button></div>
+        <div class="sheet-body" id="sheet-hour-body"></div>
+    </aside>
+    <aside class="sheet no-print" id="sheet-selected">
+        <div class="sheet-head"><h3>Đã chọn ưng ý</h3><button type="button" class="icon-btn close-sheet">×</button></div>
+        <div class="sheet-body" id="sheet-selected-body"></div>
+        <div class="sheet-actions">
+            <button type="button" class="btn ghost" id="btn-clear-selected">Xóa tất cả</button>
+            <button type="button" class="btn" id="btn-print-view">In để xem</button>
+            <button type="button" class="btn primary" id="btn-print-khach">In cho khách</button>
+        </div>
+    </aside>
+
+    <div id="toast" class="no-print"></div>
+    <div id="loading-overlay" class="no-print"><span>Đang tính toán, vui lòng chờ...</span></div>
+
+    <script src="constants.js"></script>
+<script src="calendar.js"></script>
+<script src="fengshui.js"></script>
+<script src="huyenkhong.js"></script>
+<script src="optimizer.js"></script>
+<script src="mobile-core.js"></script>
+<script src="ui-mobile.js"></script>
+<script src="main-mobile.js"></script>
+
+</body>
+</html>
