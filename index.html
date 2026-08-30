@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XEM NGÀY CAO CẤP - Mobile</title>
+    <link rel="stylesheet" href="mobile-style.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="m-header">
+        <div class="m-header-top">
+            <div>
+                <h1 class="m-title">XEM NGÀY CAO CẤP</h1>
+                <p class="m-slogan">Đắc Thiên Khí - Vạn Sự An</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== LOADING OVERLAY ==================== -->
+    <div id="loading-overlay" class="m-loading-overlay" style="display:none;">
+        <div class="m-loading-spinner"></div>
+        <p>Đang tính toán...</p>
+    </div>
+
+    <!-- ==================== TOAST ==================== -->
+    <div id="toast" class="m-toast"></div>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="m-main">
+
+        <!-- ========== SCREEN 1: THÔNG TIN ========== -->
+        <div id="screen-input" class="m-screen active">
+            <div class="m-screen-body">
+                <!-- Form nhập liệu -->
+                <div class="m-input-grid">
+                    <div class="m-input-group">
+                        <label for="m-birth-year">Tuổi xem</label>
+                        <input type="number" id="m-birth-year" value="1993" placeholder="VD: 1993">
+                    </div>
+                    <div class="m-input-group">
+                        <label for="m-toa-do">Tọa xem (°)</label>
+                        <input type="number" id="m-toa-do" value="120" step="0.1" placeholder="VD: 120">
+                    </div>
+                    <div class="m-input-group">
+                        <label for="m-view-year">Năm xem</label>
+                        <input type="number" id="m-view-year" value="" placeholder="VD: 2026">
+                    </div>
+                    <div class="m-input-group">
+                        <label for="m-event">Việc cần xem</label>
+                        <input type="text" id="m-event" placeholder="Tùy chọn...">
+                    </div>
+                    <div class="m-input-group m-input-group--full">
+                        <label for="m-location">Địa điểm xem</label>
+                        <input type="text" id="m-location" placeholder="Nhập địa điểm để tính Chính Ngọ...">
+                    </div>
+                </div>
+
+                <button class="m-btn m-btn--primary m-btn--full" style="margin-top: 20px;" id="btn-view-result" onclick="handleViewResult()">
+                    XEM THÔNG TIN
+                </button>
+
+                <!-- Kết quả đầu vào (ẩn ban đầu) -->
+                <div id="input-results" class="m-input-results" style="display:none; margin-top: 20px;">
+                    <div class="m-card m-card--input"><div class="m-card-head"><span class="m-card-icon">👤</span><span class="m-card-title">TUỔI XEM</span></div><div class="m-card-body" id="card-tuoi"></div></div>
+                    <div class="m-card m-card--input"><div class="m-card-head"><span class="m-card-icon">🧭</span><span class="m-card-title">TỌA XEM</span></div><div class="m-card-body" id="card-toa"></div></div>
+                    <div class="m-card m-card--input"><div class="m-card-head"><span class="m-card-icon">📅</span><span class="m-card-title">NĂM XEM & THẦN SÁT</span></div><div class="m-card-body" id="card-nam"></div></div>
+                    <div class="m-card m-card--input"><div class="m-card-head"><span class="m-card-icon">⭐</span><span class="m-card-title">NGŨ HOÀNG & NHỊ HẮC THEO THÁNG</span></div><div class="m-card-body" id="card-nguhoang-thang"></div></div>
+                    <div id="tranchon-summary" style="display:none;"><div class="m-tranchon-summary"><div class="m-tranchon-summary-title">TỔNG HỢP TRÁNH – CHỌN</div><div id="tranchon-summary-body"></div></div></div>
+                    <div class="m-card m-card--input"><div class="m-card-head"><span class="m-card-title">THÁI DƯƠNG / THÁI ÂM ĐÁO TỌA</span></div><div class="m-card-body" id="card-thaiduongam"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SCREEN 2: BỘ LỌC NÂNG CAO ========== -->
+        <div id="screen-filter" class="m-screen">
+            <div class="m-screen-body">
+                <!-- TẦNG 1: THÁNG & TIẾT KHÍ & CAN CHI -->
+                <div class="m-accordion">
+                    <div class="m-accordion-header" onclick="toggleAccordion('acc-layer1')">
+                        <span>🌿 TẦNG 1: THÁNG, CAN/CHI & TIẾT KHÍ</span>
+                        <span class="m-badge m-badge--sm" id="badge-layer1" style="display:none;">0</span>
+                        <span class="m-chevron m-chevron--sm" id="acc-layer1-chevron">▼</span>
+                    </div>
+                    <div class="m-accordion-body" id="acc-layer1">
+                        <!-- Nội dung Tầng 1 giữ nguyên -->
+                        <div class="m-filter-group"><h4 class="m-filter-title">📅 1A. THÁNG</h4><div class="m-dropdown" id="month-dropdown"><div class="m-dropdown-header" onclick="toggleGenericDropdown('month-dropdown-body', 'month-dropdown-chevron')"><span id="month-dropdown-text">Đã chọn 12 tháng</span><span class="m-chevron" id="month-dropdown-chevron">▼</span></div><div class="m-dropdown-body" id="month-dropdown-body" style="display:none;"><button type="button" class="m-select-all-btn" id="btn-month-all" onclick="toggleAllMonths()">✅ Chọn tất cả</button><div class="m-month-grid" id="month-grid"></div></div></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🔤 1B. CAN & CHI</h4><p style="font-size:11px;color:#B39DDB;margin:0 0 8px;">Áp dụng cho Can/Chi của Ngày và Giờ</p><div class="m-dropdown" id="canchi-dropdown"><div class="m-dropdown-header" onclick="toggleGenericDropdown('canchi-dropdown-body', 'canchi-dropdown-chevron')"><span id="canchi-dropdown-text">Lọc Can & Chi</span><span class="m-chevron" id="canchi-dropdown-chevron">▼</span></div><div class="m-dropdown-body" id="canchi-dropdown-body" style="display:none;"><button type="button" class="m-select-all-btn" id="btn-canchi-all" onclick="toggleAllCanChi()">✅ Chọn tất cả</button><div class="m-filter-chips" id="filter-can" style="margin-bottom:8px;"></div><div class="m-filter-chips" id="filter-chi"></div></div></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🌿 1C. TIẾT KHÍ</h4><div class="m-dropdown" id="tietkhi-dropdown"><div class="m-dropdown-header" onclick="toggleGenericDropdown('tietkhi-dropdown-body', 'tietkhi-dropdown-chevron')"><span id="tietkhi-dropdown-text">Lọc Tiết Khí</span><span class="m-chevron" id="tietkhi-dropdown-chevron">▼</span></div><div class="m-dropdown-body" id="tietkhi-dropdown-body" style="display:none;"><button type="button" class="m-select-all-btn" id="btn-tietkhi-all" onclick="toggleAllTietKhi()">✅ Chọn tất cả</button><div class="m-filter-chips" id="filter-tietkhi" style="margin-top:8px;"></div></div></div></div>
+                    </div>
+                </div>
+
+                <!-- TẦNG 2: TỐI ƯU HÀNH & VẬN & CHI -->
+                <div class="m-accordion">
+                    <div class="m-accordion-header" onclick="toggleAccordion('acc-layer2')">
+                        <span>⚡ TẦNG 2: TỐI ƯU HÀNH, VẬN & CHI</span>
+                        <span class="m-badge m-badge--sm" id="badge-layer2" style="display:none;">0</span>
+                        <span class="m-chevron m-chevron--sm" id="acc-layer2-chevron">▶</span>
+                    </div>
+                    <div class="m-accordion-body" id="acc-layer2" style="display:none;">
+                        <div class="m-filter-group"><h4 class="m-filter-title">🔥 2A. QUAN HỆ HÀNH YÊU CẦU</h4><div id="filter-hanh-pairs"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🌀 2B. QUAN HỆ VẬN YÊU CẦU</h4><div id="filter-van-pairs"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🎯 2C. HÀNH/VẬN CỤ THỂ THEO TRỤ</h4><div id="filter-hanhvan-pillar"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🐾 2D. QUAN HỆ CHI YÊU CẦU</h4><div id="filter-chi-pairs"></div></div>
+                    </div>
+                </div>
+
+                <!-- TẦNG 3: HUYỀN KHÔNG ĐẠI QUÁI -->
+                <div class="m-accordion">
+                    <div class="m-accordion-header" onclick="toggleAccordion('acc-layer3')">
+                        <span>☯ TẦNG 3: HUYỀN KHÔNG ĐẠI QUÁI</span>
+                        <span class="m-badge m-badge--sm" id="badge-layer3" style="display:none;">0</span>
+                        <span class="m-chevron m-chevron--sm" id="acc-layer3-chevron">▶</span>
+                    </div>
+                    <div class="m-accordion-body" id="acc-layer3" style="display:none;">
+                        <div class="m-filter-group"><h4 class="m-filter-title">👨‍👩‍👧 3A. CẤU HÌNH VAI TRÒ GIA ĐÌNH</h4><div class="m-filter-grid" id="filter-vaitro"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🏠 3B. GIA ĐÌNH CỤ THỂ</h4><div id="filter-giadinh"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">🌟 3C. THẤT TINH ĐẢ KIẾP</h4><div class="m-filter-grid" id="filter-thattinh"></div></div>
+                        <div class="m-filter-group"><h4 class="m-filter-title">👫 3E. HUYNH ĐỆ</h4><div class="m-filter-grid" id="filter-huynhde"></div></div>
+                    </div>
+                </div>
+
+                <button class="m-btn m-btn--accent m-btn--full m-btn--sticky" id="btn-apply-filter" onclick="window._userTriggeredApply=true;applyAllFilters();setTimeout(function(){window._userTriggeredApply=false;},500);">
+                    ⚡ ÁP DỤNG BỘ LỌC
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== SCREEN 3: KẾT QUẢ ========== -->
+        <div id="screen-results" class="m-screen">
+            <div class="m-screen-body">
+                <div class="m-results-bar" id="results-bar" style="display:none;">
+                    <div class="m-results-stats">
+                        <span id="stat-ngay">0 ngày</span>
+                        <span id="stat-gio">0 giờ</span>
+                        <span id="stat-filters">0 filter</span>
+                    </div>
+                    <div class="m-results-actions">
+                        <button class="m-btn m-btn--sm m-btn--outline" onclick="clearAllFilters()">🗑️ Xóa hết</button>
+                        <button class="m-btn m-btn--sm m-btn--outline" onclick="showSelectedList()">⭐ Đã chọn (<span id="selected-count">0</span>)</button>
+                        <button class="m-btn m-btn--sm m-btn--cherry" onclick="printSelected()">🖨️ In</button>
+                    </div>
+                </div>
+                <div id="results-container" class="m-results-container"></div>
+                <button class="m-btn m-btn--outline m-btn--full" id="btn-load-more" style="display:none;" onclick="loadMoreResults()">📥 TẢI THÊM NGÀY</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== BOTTOM NAVIGATION (TABS) ==================== -->
+    <nav class="m-bottom-nav">
+        <button class="m-nav-btn active" id="nav-input" onclick="switchTab('input')">
+            <span class="m-nav-icon">📋</span>
+            <span class="m-nav-text">Thông Tin</span>
+        </button>
+        <button class="m-nav-btn disabled" id="nav-filter" onclick="switchTab('filter')">
+            <span class="m-nav-icon">🎛️</span>
+            <span class="m-nav-text">Bộ Lọc</span>
+            <span class="m-badge" id="filter-badge-total" style="display:none;">0</span>
+        </button>
+        <button class="m-nav-btn disabled" id="nav-results" onclick="switchTab('results')">
+            <span class="m-nav-icon">📊</span>
+            <span class="m-nav-text">Kết Quả</span>
+            <span id="result-count-badge" class="m-badge" style="display:none;">0</span>
+        </button>
+    </nav>
+
+    <!-- Các Modal giữ nguyên như cũ -->
+    <div id="selected-sheet" class="m-sheet" style="display:none;">...</div>
+    <div id="detail-modal" class="m-modal" style="display:none;">...</div>
+    <div id="print-note-mobile" class="m-print-note">...</div>
+
+    <!-- Scripts -->
+    <script src="constants.js"></script>
+    <script src="calendar.js"></script>
+    <script src="fengshui.js"></script>
+    <script src="huyenkhong.js"></script>
+    <script src="optimizer.js"></script>
+    <script src="mobile-ui.js"></script>
+    <script src="mobile-main.js"></script>
+</body>
+</html>
